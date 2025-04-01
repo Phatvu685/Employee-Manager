@@ -23,9 +23,10 @@ async function getDepartmentById(departmentId) {
 async function addDepartment(department) {
     const conn = await connection();
     try {
-        const { departmentId, departmentName } = department;
-        await conn.execute('INSERT INTO departments (departmentId, departmentName) VALUES (?, ?)', 
-            [departmentId, departmentName]);
+        const { departmentName } = department;
+        const [result] = await conn.execute('INSERT INTO departments (departmentName) VALUES (?)', 
+            [departmentName]);
+        return result.insertId; // Trả về ID được tự động sinh
     } finally {
         await conn.end();
     }

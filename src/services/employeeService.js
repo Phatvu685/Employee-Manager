@@ -15,14 +15,14 @@ async function fetchEmployeeById(employeeId) {
 }
 
 async function createEmployee(employee) {
-    if (!employee.employeeId || !employee.fullName || !employee.departmentId) {
+    if (!employee.fullName || !employee.departmentId) {
         throw new Error('Missing required fields');
     }
     const department = await departmentModel.getDepartmentById(employee.departmentId);
     if (!department) {
         throw new Error('Department not found');
     }
-    await employeeModel.addEmployee(employee);
+    return await employeeModel.addEmployee(employee);
 }
 
 async function editEmployee(employeeId, employee) {

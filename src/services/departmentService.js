@@ -1,5 +1,4 @@
 const departmentModel = require('../models/departmentModel');
-const employeeModel = require('../models/employeeModel');
 
 async function fetchDepartments() {
     const departments = await departmentModel.getAllDepartments();
@@ -15,10 +14,10 @@ async function fetchDepartmentById(departmentId) {
 }
 
 async function createDepartment(department) {
-    if (!department.departmentId || !department.departmentName) {
+    if (!department.departmentName) {
         throw new Error('Missing required fields');
     }
-    await departmentModel.addDepartment(department);
+    return await departmentModel.addDepartment(department);
 }
 
 async function editDepartment(departmentId, department) {
@@ -33,11 +32,6 @@ async function removeDepartment(departmentId) {
     const existingDepartment = await departmentModel.getDepartmentById(departmentId);
     if (!existingDepartment) {
         throw new Error('Department not found');
-    }
-    const employees = await employeeModel.getAllEmployees();
-    const hasEmployees = employees.some(emp => emp.departmentId === departmentId);
-    if (hasEmployees) {
-        throw new Error('Cannot delete department with employees');
     }
     await departmentModel.deleteDepartment(departmentId);
 }

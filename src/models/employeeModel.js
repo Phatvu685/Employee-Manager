@@ -23,11 +23,12 @@ async function getEmployeeById(employeeId) {
 async function addEmployee(employee) {
     const conn = await connection();
     try {
-        const { employeeId, fullName, birthDate, departmentId } = employee;
-        await conn.execute(
-            'INSERT INTO employees (employeeId, fullName, birthDate, departmentId) VALUES (?, ?, ?, ?)',
-            [employeeId, fullName, birthDate, departmentId]
+        const { fullName, birthDate, departmentId } = employee;
+        const [result] = await conn.execute(
+            'INSERT INTO employees (fullName, birthDate, departmentId) VALUES (?, ?, ?)',
+            [fullName, birthDate, departmentId]
         );
+        return result.insertId; 
     } finally {
         await conn.end();
     }

@@ -11,18 +11,19 @@ async function getDepartments(req, res) {
 
 async function getDepartment(req, res) {
     try {
-        const department = await departmentService.fetchDepartmentById(req.params.departmentId);
+        const { departmentId } = req.params;
+        const department = await departmentService.fetchDepartmentById(departmentId);
         res.json({ success: true, data: department });
     } catch (error) {
-        const status = error.message === 'Department not found' ? 404 : 500;
-        res.status(status).json({ success: false, message: error.message });
+        res.status(404).json({ success: false, message: error.message });
     }
 }
 
 async function addDepartment(req, res) {
     try {
-        await departmentService.createDepartment(req.body);
-        res.status(201).json({ success: true, message: 'Department added successfully' });
+        const department = req.body;
+        const departmentId = await departmentService.createDepartment(department);
+        res.status(201).json({ success: true, message: 'Department added successfully', departmentId });
     } catch (error) {
         res.status(400).json({ success: false, message: error.message });
     }
@@ -30,7 +31,9 @@ async function addDepartment(req, res) {
 
 async function updateDepartment(req, res) {
     try {
-        await departmentService.editDepartment(req.params.departmentId, req.body);
+        const { departmentId } = req.params;
+        const department = req.body;
+        await departmentService.editDepartment(departmentId, department);
         res.json({ success: true, message: 'Department updated successfully' });
     } catch (error) {
         res.status(400).json({ success: false, message: error.message });
@@ -39,7 +42,8 @@ async function updateDepartment(req, res) {
 
 async function deleteDepartment(req, res) {
     try {
-        await departmentService.removeDepartment(req.params.departmentId);
+        const { departmentId } = req.params;
+        await departmentService.removeDepartment(departmentId);
         res.json({ success: true, message: 'Department deleted successfully' });
     } catch (error) {
         res.status(400).json({ success: false, message: error.message });
